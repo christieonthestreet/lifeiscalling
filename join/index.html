@@ -11,7 +11,7 @@
 <link rel="icon" href="../icon.png">
 <link rel="apple-touch-icon" href="../icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
 <style>
   /* Black screen, the noise in your head flashes, then the one line that matters, then the fire. */
   :root {
@@ -20,7 +20,6 @@
     --muted: #8f9aa6;
     --sun: #f6dca6;
     --red: #ff4b3e;
-    --shout: "Anton", "Impact", "Arial Narrow Bold", sans-serif;
     --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     color-scheme: dark;
   }
@@ -31,11 +30,12 @@
   /* Act 1: the noise */
   #noise { position: fixed; inset: 0; pointer-events: none; transition: opacity 0.9s ease; }
   .word {
-    position: absolute; font-family: var(--shout); text-transform: uppercase; line-height: 0.95;
-    letter-spacing: 0.01em; white-space: nowrap; color: var(--white); opacity: 0;
+    position: absolute; font-family: var(--body); font-weight: 600; text-transform: lowercase; line-height: 1.1;
+    letter-spacing: -0.03em; white-space: nowrap; color: var(--white); opacity: 0;
     transform: translate(-50%, -50%);
   }
   .word.on { animation: flicker 0.42s steps(1, end) forwards; }
+  .word.long.on { animation-duration: 0.75s; }
   @keyframes flicker {
     0% { opacity: 1; } 18% { opacity: 0.15; } 30% { opacity: 1; } 70% { opacity: 1; } 82% { opacity: 0.3; } 100% { opacity: 0; }
   }
@@ -49,22 +49,22 @@
   }
   .fade { opacity: 0; transform: translateY(10px); transition: opacity 0.9s ease, transform 0.9s ease; }
   .fade.in { opacity: 1; transform: none; }
-  .secret { font-size: clamp(26px, 6.5vw, 44px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin: 0; text-wrap: balance; }
+  .secret { font-size: clamp(22px, 4.5vw, 34px); color: var(--muted); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin: 0; text-wrap: balance; }
   .dots { display: inline-block; min-width: 4.2em; text-align: left; }
   .answer {
-    font-family: var(--shout); text-transform: uppercase; font-size: clamp(44px, 13vw, 96px); line-height: 0.95;
-    margin: 0; max-width: 11ch; text-wrap: balance;
+    font-weight: 700; font-size: clamp(40px, 9vw, 88px); line-height: 1.02; letter-spacing: -0.045em;
+    margin: 0; max-width: 12ch; text-wrap: balance;
   }
   .answer.in { animation: thump 0.5s cubic-bezier(.2,1.6,.4,1) both; }
   @keyframes thump { from { opacity: 0; transform: scale(1.35); } to { opacity: 1; transform: scale(1); } }
 
   .fire { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .fire img { width: 92px; height: auto; transform-origin: 50% 90%; }
+  .fire img { width: clamp(84px, 9vw, 110px); height: auto; transform-origin: 50% 90%; }
   .fire.in img { animation: pop 0.6s cubic-bezier(.2,1.8,.4,1) both, sway 3s ease-in-out 0.6s infinite; }
   @keyframes pop { from { transform: scale(0) rotate(-20deg); } to { transform: scale(1) rotate(0); } }
   @keyframes sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
   .bubble {
-    background: var(--white); color: #000; font-weight: 800; font-size: 17px; padding: 9px 16px; border-radius: 18px;
+    background: var(--white); color: #000; font-weight: 600; font-size: 17px; padding: 9px 16px; border-radius: 18px;
     position: relative; opacity: 0; transform: scale(0.6);
     transition: opacity 0.25s ease 0.45s, transform 0.35s cubic-bezier(.2,1.8,.4,1) 0.45s;
   }
@@ -73,7 +73,7 @@
   .fire { flex-direction: column-reverse; }
 
   form { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 12px; }
-  .pitch { margin: 0; font-size: 18px; line-height: 1.4; font-weight: 600; text-wrap: balance; }
+  .pitch { margin: 0; font-size: clamp(17px, 2.2vw, 20px); line-height: 1.4; font-weight: 600; text-wrap: balance; }
   .pitch small { display: block; font-weight: 400; color: var(--muted); font-size: 15px; margin-top: 6px; }
   label.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   input[type="email"] {
@@ -82,7 +82,7 @@
   }
   input[type="email"]:focus { border-color: var(--sun); }
   button {
-    font: inherit; font-size: 17px; font-weight: 800; color: #000; background: var(--sun); border: 0; border-radius: 999px;
+    font: inherit; font-size: 17px; font-weight: 600; color: #000; background: var(--sun); border: 0; border-radius: 999px;
     padding: 16px 20px; cursor: pointer;
   }
   button:disabled { opacity: 0.6; cursor: default; }
@@ -126,9 +126,13 @@
   // Paste your Kit form id here once the Kit account exists (the number in the form's embed link).
   const KIT_FORM_ID = '';
 
+  // The noise in your head. Short ones flash big, long ones wrap. Change the words here.
   const WORDS = [
-    'ANXIETY', 'OVERTHINKING', 'INDECISIVE', 'NON CONFRONTATIONAL', 'RESENTMENT', 'HOLDING GRUDGES',
-    "I'LL DO IT TOMORROW", 'ANGER', 'WORRY', 'DOUBT', 'BUT WHAT IF I FAIL?',
+    'ANXIETY', 'OVERTHINKING', "I'LL DECIDE LATER.", 'INDECISIVE', "I'LL TRAVEL NEXT YEAR.", 'NON CONFRONTATIONAL',
+    "I'LL DO IT TOMORROW.", 'RESENTMENT', "I'M JEALOUS.", 'HOLDING GRUDGES', 'I HATE THEM.', 'ANGER',
+    "I WISH I DIDN'T WASTE SO MUCH TIME.", 'WORRY', 'IF I JUST TOOK THAT OPPORTUNITY.', 'DOUBT',
+    'IF I JUST INVESTED IN BITCOIN.', 'HALF THE DAY IS GONE.', 'I WOKE UP LATE. MY DAY IS RUINED.',
+    'HOW COULD THEY DO THAT TO ME?', 'BUT WHAT IF I FAIL?',
   ];
   const LAST = 'BUT WHAT IF.....';
 
@@ -145,10 +149,16 @@
 
   function flash(text, stay) {
     const el = document.createElement('div');
-    el.className = 'word';
+    el.className = text.length > 16 ? 'word long' : 'word';
     el.textContent = text;
     const w = window.innerWidth, h = window.innerHeight;
-    el.style.fontSize = Math.min(w * 0.16, 120) + 'px';
+    const long = text.length > 16;
+    el.style.fontSize = Math.min(w * (long ? 0.085 : 0.12), long ? 64 : 96) + 'px';
+    if (long) {
+      el.style.whiteSpace = 'normal';
+      el.style.width = Math.min(w * 0.86, 760) + 'px';
+      el.style.textAlign = 'center';
+    }
     noise.appendChild(el);
     // Shrink anything wider than the screen, then place it fully on screen.
     const maxW = w * 0.9;
@@ -160,7 +170,7 @@
     el.style.top = y + 'px';
     el.style.transform = `translate(-50%, -50%) rotate(${stay ? 0 : (Math.random() * 8 - 4)}deg)`;
     requestAnimationFrame(() => el.classList.add(stay ? 'stay' : 'on'));
-    if (!stay) setTimeout(() => el.remove(), 600);
+    if (!stay) setTimeout(() => el.remove(), 900);
   }
 
   function showEnd() {
@@ -177,10 +187,15 @@
   function play() {
     // Act 1: the noise speeds up.
     let t = 300;
-    const order = [...WORDS, ...WORDS.slice().sort(() => Math.random() - 0.5)];
-    order.forEach((word, i) => {
+    // Each once, slow enough to read at first, then faster and faster, then the short ones again in a blur.
+    const blur = WORDS.filter((w) => w.length <= 12).sort(() => Math.random() - 0.5);
+    WORDS.forEach((word, i) => {
       at(t, () => flash(word));
-      t += Math.max(110, 380 - i * 16);
+      t += Math.max(260, (word.length > 16 ? 700 : 480) - i * 18);
+    });
+    blur.forEach((word) => {
+      at(t, () => flash(word));
+      t += 110;
     });
     at(t + 150, () => flash(LAST, true));
     t += 1500;
