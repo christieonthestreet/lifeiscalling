@@ -257,8 +257,8 @@
       bubble.style.opacity = 0;
       setTimeout(() => { bubble.textContent = text; bubble.style.opacity = 1; }, 250);
     }, ms);
-    say('i’m here to remind you every day.', 2600);
-    say('so you stop waiting for tomorrow.', 5600);
+    say('i’m here to remind you every day.', 3800);
+    say('so you stop waiting for tomorrow.', 8000);
     const started = Date.now();
     // Counts up from 0 to the real number, then keeps ticking with every moment u spend here.
     const target = () => ((age * YEAR_MS + (Date.now() - started)) / (LIFE_YEARS * YEAR_MS)) * 100;
