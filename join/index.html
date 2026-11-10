@@ -25,7 +25,7 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--black); color: var(--white); font-family: var(--body); }
-  body { overflow: hidden; -webkit-tap-highlight-color: transparent; }
+  body { overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
   /* Act 1: the noise */
   #noise { position: fixed; inset: 0; pointer-events: none; transition: opacity 0.9s ease; }
@@ -43,7 +43,7 @@
 
   /* Act 2 and 3: the line, the fire, the form */
   #stage {
-    position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 22px; text-align: center;
     padding: max(24px, env(safe-area-inset-top, 0px)) max(22px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(22px, env(safe-area-inset-left, 0px));
   }
@@ -92,6 +92,10 @@
   .ageInput:focus { border-color: var(--sun); }
   #lived { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .pct { margin: 0; font-weight: 700; font-size: clamp(40px, 11vw, 84px); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; line-height: 1; }
+  .bar { width: min(380px, 86vw); height: 14px; border-radius: 999px; background: #1d2a3a; overflow: hidden; margin-top: 18px; }
+  .barUsed { height: 100%; width: 0; background: linear-gradient(90deg, #ff4b3e, #f6dca6); border-radius: 999px; }
+  .barKey { width: min(380px, 86vw); display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .barKey span:first-child { color: var(--white); }
   .pctLabel { margin: 0; font-size: clamp(17px, 2.4vw, 22px); color: var(--muted); }
   .note { min-height: 22px; margin: 0; font-size: 15px; color: var(--muted); }
   .note.ok { color: var(--sun); font-weight: 600; }
@@ -118,7 +122,7 @@
   <form id="ageForm" class="fade" hidden novalidate>
     <p class="pitch">how old are u?</p>
     <label class="sr" for="age">your age</label>
-    <input id="age" type="number" inputmode="numeric" min="1" max="120" placeholder="your age" class="ageInput">
+    <input id="age" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" placeholder="your age" class="ageInput">
     <button type="submit">show me</button>
     <p class="note" id="ageNote" role="status"></p>
   </form>
@@ -126,6 +130,8 @@
   <div id="lived" class="fade" hidden>
     <p class="pct" id="pct" aria-live="off">0.00000000%</p>
     <p class="pctLabel" id="pctLabel">of your life, gone.</p>
+    <div class="bar" aria-hidden="true"><div class="barUsed" id="barUsed"></div></div>
+    <div class="barKey"><span id="usedText">used</span><span id="leftText">left</span></div>
   </div>
 
   <form id="form" class="fade" hidden novalidate>
@@ -151,7 +157,8 @@
     "I'LL DO IT TOMORROW.", 'RESENTMENT', "I'M JEALOUS.", 'HOLDING GRUDGES', 'I HATE THEM.', 'ANGER',
     "I WISH I DIDN'T WASTE SO MUCH TIME.", 'WORRY', 'IF I JUST TOOK THAT OPPORTUNITY.', 'DOUBT',
     'IF I JUST INVESTED IN BITCOIN.', 'HALF THE DAY IS GONE.', 'I WOKE UP LATE. MY DAY IS RUINED.',
-    'HOW COULD THEY DO THAT TO ME?', 'BUT WHAT IF I FAIL?',
+    'HOW COULD THEY DO THAT TO ME?', 'I SHOULD HAVE STARTED YOUTUBE IN 2016.', 'COVID RUINED EVERYTHING.',
+    "WHY DIDN'T I DANCE ON TIKTOK IN 2020?", 'BUT WHAT IF I FAIL?',
   ];
   const LAST = 'BUT WHAT IF.....';
 
@@ -210,7 +217,13 @@
   const pctLabel = document.getElementById('pctLabel');
   const YEAR_MS = 365.25 * 24 * 60 * 60 * 1000;
   const LIFE_YEARS = 86; // the same rough starting guess the app uses
-  const reveal = (el) => { el.hidden = false; requestAnimationFrame(() => el.classList.add('in')); };
+  const reveal = (el) => {
+    el.hidden = false;
+    requestAnimationFrame(() => {
+      el.classList.add('in');
+      try { el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch {}
+    });
+  };
 
   function showAge() {
     if (!ageForm.hidden || !form.hidden) return;
@@ -220,7 +233,7 @@
 
   ageForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const age = Number(document.getElementById('age').value);
+    const age = Number(document.getElementById('age').value.replace(/[^0-9]/g, ''));
     const ageNote = document.getElementById('ageNote');
     if (!Number.isInteger(age) || age < 1 || age > 120) {
       ageNote.textContent = 'type your age in years, like 27.';
@@ -240,8 +253,13 @@
       const eased = 1 - Math.pow(1 - t, 3);
       const value = Math.min(target(), 99.99999999) * eased;
       pct.textContent = value.toFixed(8) + '%';
+      barUsed.style.width = value + '%';
       requestAnimationFrame(tick);
     }
+    const barUsed = document.getElementById('barUsed');
+    const left = Math.max(0, LIFE_YEARS - age);
+    document.getElementById('usedText').textContent = `${age} ${age === 1 ? 'year' : 'years'} used`;
+    document.getElementById('leftText').textContent = left ? `about ${left} left` : 'every day is extra';
     if (age >= LIFE_YEARS) pctLabel.textContent = 'past the average. every day is a gift now.';
     reveal(lived);
     tick();
