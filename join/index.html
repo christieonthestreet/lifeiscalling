@@ -76,7 +76,7 @@
   .pitch { margin: 0; font-size: clamp(17px, 2.2vw, 20px); line-height: 1.4; font-weight: 600; text-wrap: balance; }
   .pitch small { display: block; font-weight: 400; color: var(--muted); font-size: 15px; margin-top: 6px; }
   label.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  input[type="email"] {
+  .ageInput, input[type="email"] {
     width: 100%; font: inherit; font-size: 17px; color: var(--white); background: #111; border: 1px solid #333;
     border-radius: 999px; padding: 15px 20px; text-align: center; outline: none;
   }
@@ -87,6 +87,12 @@
   }
   button:disabled { opacity: 0.6; cursor: default; }
   button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
+  .ageInput::-webkit-outer-spin-button, .ageInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .ageInput { -moz-appearance: textfield; width: 100%; font: inherit; font-size: 17px; color: var(--white); background: #111; border: 1px solid #333; border-radius: 999px; padding: 15px 20px; text-align: center; outline: none; }
+  .ageInput:focus { border-color: var(--sun); }
+  #lived { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .pct { margin: 0; font-weight: 700; font-size: clamp(40px, 11vw, 84px); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; line-height: 1; }
+  .pctLabel { margin: 0; font-size: clamp(17px, 2.4vw, 22px); color: var(--muted); }
   .note { min-height: 22px; margin: 0; font-size: 15px; color: var(--muted); }
   .note.ok { color: var(--sun); font-weight: 600; }
   .fine { font-size: 12px; color: var(--muted); }
@@ -109,6 +115,19 @@
     <img src="../flame.png" alt="The Life Is Calling fire" width="160" height="245">
     <div class="bubble">you dying rn bish!</div>
   </div>
+  <form id="ageForm" class="fade" hidden novalidate>
+    <p class="pitch">how old are u?</p>
+    <label class="sr" for="age">your age</label>
+    <input id="age" type="number" inputmode="numeric" min="1" max="120" placeholder="your age" class="ageInput">
+    <button type="submit">show me</button>
+    <p class="note" id="ageNote" role="status"></p>
+  </form>
+
+  <div id="lived" class="fade" hidden>
+    <p class="pct" id="pct" aria-live="off">0.00000000%</p>
+    <p class="pctLabel" id="pctLabel">of your life, gone.</p>
+  </div>
+
   <form id="form" class="fade" hidden novalidate>
     <p class="pitch">put in your email for the app launch + early early founder benefits.<small>be first in. founder price. no spam, just the launch.</small></p>
     <label class="sr" for="email">your email</label>
@@ -180,9 +199,54 @@
     dots.textContent = '........';
     answer.hidden = false; answer.classList.add('in');
     fire.hidden = false; fire.classList.add('in');
-    form.hidden = false; requestAnimationFrame(() => form.classList.add('in'));
+    showAge();
     skip.hidden = true;
   }
+
+  // Act 4: how old are u? Then the share of life already gone, ticking up live, then the email.
+  const ageForm = document.getElementById('ageForm');
+  const lived = document.getElementById('lived');
+  const pct = document.getElementById('pct');
+  const pctLabel = document.getElementById('pctLabel');
+  const YEAR_MS = 365.25 * 24 * 60 * 60 * 1000;
+  const LIFE_YEARS = 86; // the same rough starting guess the app uses
+  const reveal = (el) => { el.hidden = false; requestAnimationFrame(() => el.classList.add('in')); };
+
+  function showAge() {
+    if (!ageForm.hidden || !form.hidden) return;
+    reveal(ageForm);
+    setTimeout(() => { try { document.getElementById('age').focus({ preventScroll: true }); } catch {} }, 600);
+  }
+
+  ageForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const age = Number(document.getElementById('age').value);
+    const ageNote = document.getElementById('ageNote');
+    if (!Number.isInteger(age) || age < 1 || age > 120) {
+      ageNote.textContent = 'type your age in years, like 27.';
+      return;
+    }
+    document.getElementById('age').blur();
+    ageForm.hidden = true;
+    document.getElementById('secret').hidden = true;
+    answer.hidden = true;
+    fire.querySelector('.bubble').textContent = age >= LIFE_YEARS ? 'bonus round. respect.' : 'it’s still going up btw.';
+    const started = Date.now();
+    // Counts up from 0 to the real number, then keeps ticking with every moment u spend here.
+    const target = () => ((age * YEAR_MS + (Date.now() - started)) / (LIFE_YEARS * YEAR_MS)) * 100;
+    const rise = 1800;
+    function tick() {
+      const t = Math.min(1, (Date.now() - started) / rise);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const value = Math.min(target(), 99.99999999) * eased;
+      pct.textContent = value.toFixed(8) + '%';
+      requestAnimationFrame(tick);
+    }
+    if (age >= LIFE_YEARS) pctLabel.textContent = 'past the average. every day is a gift now.';
+    reveal(lived);
+    tick();
+    setTimeout(() => reveal(form), rise + 900);
+  });
 
   function play() {
     // Act 1: the noise speeds up.
@@ -211,8 +275,8 @@
     t += 1800;
     // Act 3: the fire, then the form.
     at(t, () => { fire.hidden = false; fire.classList.add('in'); });
-    t += 1600;
-    at(t, () => { form.hidden = false; requestAnimationFrame(() => form.classList.add('in')); skip.hidden = true; });
+    t += 1400;
+    at(t, () => { showAge(); skip.hidden = true; });
   }
 
   skip.addEventListener('click', showEnd);
