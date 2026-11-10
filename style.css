@@ -1,0 +1,60 @@
+/* Life Is Calling: the app's night sky, the blue fire, lowercase voice. */
+:root {
+  --sky: #0a1830;
+  --sky-2: #10244a;
+  --text: #f6f3ec;
+  --muted: #a9bccb;
+  --sun: #f6dca6;
+  --line: rgba(255, 255, 255, 0.16);
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--sky); }
+body {
+  margin: 0; min-height: 100vh; color: var(--text); font-family: var(--font); font-size: 17px; line-height: 1.6;
+  background: radial-gradient(1200px 600px at 50% -10%, var(--sky-2), var(--sky) 70%);
+}
+a { color: var(--sun); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; border-radius: 6px; }
+.wrap {
+  max-width: 640px; margin: 0 auto;
+  padding: 40px max(20px, env(safe-area-inset-right, 0px)) 64px max(20px, env(safe-area-inset-left, 0px));
+  display: flex; flex-direction: column; gap: 40px;
+}
+nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 15px; }
+nav .brand { color: var(--text); text-decoration: none; font-weight: 600; letter-spacing: -0.01em; }
+nav .links { display: flex; gap: 20px; }
+nav .links a { color: var(--muted); text-decoration: none; }
+nav .links a:hover, nav .links a[aria-current] { color: var(--text); }
+.hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; padding-top: 12px; }
+.hero img { width: 112px; height: auto; animation: sway 3.2s ease-in-out infinite; transform-origin: 50% 90%; }
+@keyframes sway { 0%, 100% { transform: rotate(-4deg) scale(0.98); } 50% { transform: rotate(4deg) scale(1.02); } }
+@media (prefers-reduced-motion: reduce) { .hero img { animation: none; } }
+h1 { margin: 0; font-size: clamp(36px, 8vw, 52px); line-height: 1.08; letter-spacing: -0.03em; font-weight: 600; text-wrap: balance; }
+h2 { margin: 0; font-size: 22px; line-height: 1.3; letter-spacing: -0.01em; font-weight: 600; text-wrap: balance; }
+p { margin: 0; }
+.lede { color: var(--muted); font-size: 19px; max-width: 30em; }
+.notif {
+  align-self: stretch; text-align: left; background: rgba(255,255,255,0.08); border: 1px solid var(--line);
+  border-radius: 18px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;
+}
+.notif img { width: 38px; height: 38px; border-radius: 9px; animation: none; }
+.notif b { font-weight: 600; display: block; }
+.notif span { color: var(--muted); font-size: 15px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+ul.list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+ul.list li::before { content: "✦"; color: var(--sun); margin-right: 10px; }
+.cta { display: flex; flex-direction: column; gap: 12px; }
+.btn {
+  display: block; text-align: center; text-decoration: none; font-weight: 600; font-size: 17px;
+  padding: 16px 20px; border-radius: 999px; background: var(--sun); color: #000;
+}
+.btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+.small { color: var(--muted); font-size: 14px; }
+.email { user-select: all; font-weight: 600; color: var(--text); }
+.prose { display: flex; flex-direction: column; gap: 28px; }
+.prose section { gap: 10px; }
+.prose ul { margin: 0; padding-left: 22px; }
+footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 20px; display: flex; gap: 18px; flex-wrap: wrap; }
+footer a { color: var(--muted); }
