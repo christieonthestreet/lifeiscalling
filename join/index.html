@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Life Is Calling</title>
+<meta name="description" content="The secret to happiness is remembering you're gonna die. Get early access to Life Is Calling.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="the secret to happiness is…">
+<meta property="og:description" content="remembering you're gonna die. early access to Life Is Calling.">
+<link rel="icon" href="../icon.png">
+<link rel="apple-touch-icon" href="../icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap">
+<style>
+  /* Black screen, the noise in your head flashes, then the one line that matters, then the fire. */
+  :root {
+    --black: #000000;
+    --white: #f6f3ec;
+    --muted: #8f9aa6;
+    --sun: #f6dca6;
+    --red: #ff4b3e;
+    --shout: "Anton", "Impact", "Arial Narrow Bold", sans-serif;
+    --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--black); color: var(--white); font-family: var(--body); }
+  body { overflow: hidden; -webkit-tap-highlight-color: transparent; }
+
+  /* Act 1: the noise */
+  #noise { position: fixed; inset: 0; pointer-events: none; transition: opacity 0.9s ease; }
+  .word {
+    position: absolute; font-family: var(--shout); text-transform: uppercase; line-height: 0.95;
+    letter-spacing: 0.01em; white-space: nowrap; color: var(--white); opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+  .word.on { animation: flicker 0.42s steps(1, end) forwards; }
+  @keyframes flicker {
+    0% { opacity: 1; } 18% { opacity: 0.15; } 30% { opacity: 1; } 70% { opacity: 1; } 82% { opacity: 0.3; } 100% { opacity: 0; }
+  }
+  .word.stay { animation: none; opacity: 1; color: var(--red); }
+
+  /* Act 2 and 3: the line, the fire, the form */
+  #stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 22px; text-align: center;
+    padding: max(24px, env(safe-area-inset-top, 0px)) max(22px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(22px, env(safe-area-inset-left, 0px));
+  }
+  .fade { opacity: 0; transform: translateY(10px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .fade.in { opacity: 1; transform: none; }
+  .secret { font-size: clamp(26px, 6.5vw, 44px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin: 0; text-wrap: balance; }
+  .dots { display: inline-block; min-width: 4.2em; text-align: left; }
+  .answer {
+    font-family: var(--shout); text-transform: uppercase; font-size: clamp(44px, 13vw, 96px); line-height: 0.95;
+    margin: 0; max-width: 11ch; text-wrap: balance;
+  }
+  .answer.in { animation: thump 0.5s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes thump { from { opacity: 0; transform: scale(1.35); } to { opacity: 1; transform: scale(1); } }
+
+  .fire { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .fire img { width: 92px; height: auto; transform-origin: 50% 90%; }
+  .fire.in img { animation: pop 0.6s cubic-bezier(.2,1.8,.4,1) both, sway 3s ease-in-out 0.6s infinite; }
+  @keyframes pop { from { transform: scale(0) rotate(-20deg); } to { transform: scale(1) rotate(0); } }
+  @keyframes sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+  .bubble {
+    background: var(--white); color: #000; font-weight: 800; font-size: 17px; padding: 9px 16px; border-radius: 18px;
+    position: relative; opacity: 0; transform: scale(0.6);
+    transition: opacity 0.25s ease 0.45s, transform 0.35s cubic-bezier(.2,1.8,.4,1) 0.45s;
+  }
+  .bubble::after { content: ""; position: absolute; left: 50%; bottom: -7px; width: 14px; height: 14px; background: var(--white); transform: translateX(-50%) rotate(45deg); border-radius: 2px; }
+  .fire.in .bubble { opacity: 1; transform: scale(1); }
+  .fire { flex-direction: column-reverse; }
+
+  form { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 12px; }
+  .pitch { margin: 0; font-size: 18px; line-height: 1.4; font-weight: 600; text-wrap: balance; }
+  .pitch small { display: block; font-weight: 400; color: var(--muted); font-size: 15px; margin-top: 6px; }
+  label.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  input[type="email"] {
+    width: 100%; font: inherit; font-size: 17px; color: var(--white); background: #111; border: 1px solid #333;
+    border-radius: 999px; padding: 15px 20px; text-align: center; outline: none;
+  }
+  input[type="email"]:focus { border-color: var(--sun); }
+  button {
+    font: inherit; font-size: 17px; font-weight: 800; color: #000; background: var(--sun); border: 0; border-radius: 999px;
+    padding: 16px 20px; cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: default; }
+  button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
+  .note { min-height: 22px; margin: 0; font-size: 15px; color: var(--muted); }
+  .note.ok { color: var(--sun); font-weight: 600; }
+  .fine { font-size: 12px; color: var(--muted); }
+  .fine a { color: var(--muted); }
+  #skip {
+    position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    background: none; color: var(--muted); font-weight: 400; font-size: 13px; padding: 8px; z-index: 5;
+  }
+  [hidden] { display: none !important; }
+  @media (prefers-reduced-motion: reduce) { .fire.in img, .answer.in { animation: none; } .fade { transition: none; } }
+</style>
+</head>
+<body>
+<div id="noise" aria-hidden="true"></div>
+
+<main id="stage">
+  <p class="secret fade" id="secret">the secret to happiness, is <span class="dots" id="dots"></span></p>
+  <h1 class="answer" id="answer" hidden>remembering you’re gonna die.</h1>
+  <div class="fire" id="fire" hidden>
+    <img src="../flame.png" alt="The Life Is Calling fire" width="160" height="245">
+    <div class="bubble">you dying rn bish!</div>
+  </div>
+  <form id="form" class="fade" hidden novalidate>
+    <p class="pitch">put in your email for the app launch + early early founder benefits.<small>be first in. founder price. no spam, just the launch.</small></p>
+    <label class="sr" for="email">your email</label>
+    <input id="email" name="email_address" type="email" inputmode="email" autocomplete="email" placeholder="your email" required>
+    <button type="submit" id="go">i’m in</button>
+    <p class="note" id="note" role="status"></p>
+    <p class="fine">by signing up you agree to get emails about the app. unsubscribe anytime. <a href="../privacy.html">privacy</a></p>
+  </form>
+</main>
+
+<button id="skip" type="button">skip</button>
+
+<script>
+  // ── Where sign-ups go ──────────────────────────────────────────────
+  // Paste your Kit form id here once the Kit account exists (the number in the form's embed link).
+  const KIT_FORM_ID = '';
+
+  const WORDS = [
+    'ANXIETY', 'OVERTHINKING', 'INDECISIVE', 'NON CONFRONTATIONAL', 'RESENTMENT', 'HOLDING GRUDGES',
+    "I'LL DO IT TOMORROW", 'ANGER', 'WORRY', 'DOUBT', 'BUT WHAT IF I FAIL?',
+  ];
+  const LAST = 'BUT WHAT IF.....';
+
+  const noise = document.getElementById('noise');
+  const secret = document.getElementById('secret');
+  const dots = document.getElementById('dots');
+  const answer = document.getElementById('answer');
+  const fire = document.getElementById('fire');
+  const form = document.getElementById('form');
+  const skip = document.getElementById('skip');
+  const timers = [];
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function flash(text, stay) {
+    const el = document.createElement('div');
+    el.className = 'word';
+    el.textContent = text;
+    const w = window.innerWidth, h = window.innerHeight;
+    el.style.fontSize = Math.min(w * 0.16, 120) + 'px';
+    noise.appendChild(el);
+    // Shrink anything wider than the screen, then place it fully on screen.
+    const maxW = w * 0.9;
+    if (el.offsetWidth > maxW) el.style.fontSize = (parseFloat(el.style.fontSize) * maxW / el.offsetWidth) + 'px';
+    const halfW = el.offsetWidth / 2, halfH = el.offsetHeight / 2;
+    const x = stay ? w / 2 : halfW + w * 0.05 + Math.random() * Math.max(0, w * 0.9 - halfW * 2);
+    const y = stay ? h / 2 : halfH + h * 0.08 + Math.random() * Math.max(0, h * 0.84 - halfH * 2);
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.transform = `translate(-50%, -50%) rotate(${stay ? 0 : (Math.random() * 8 - 4)}deg)`;
+    requestAnimationFrame(() => el.classList.add(stay ? 'stay' : 'on'));
+    if (!stay) setTimeout(() => el.remove(), 600);
+  }
+
+  function showEnd() {
+    timers.forEach(clearTimeout);
+    noise.style.opacity = 0;
+    secret.classList.add('in');
+    dots.textContent = '........';
+    answer.hidden = false; answer.classList.add('in');
+    fire.hidden = false; fire.classList.add('in');
+    form.hidden = false; requestAnimationFrame(() => form.classList.add('in'));
+    skip.hidden = true;
+  }
+
+  function play() {
+    // Act 1: the noise speeds up.
+    let t = 300;
+    const order = [...WORDS, ...WORDS.slice().sort(() => Math.random() - 0.5)];
+    order.forEach((word, i) => {
+      at(t, () => flash(word));
+      t += Math.max(110, 380 - i * 16);
+    });
+    at(t + 150, () => flash(LAST, true));
+    t += 1500;
+    // Silence.
+    at(t, () => { noise.style.opacity = 0; });
+    t += 1200;
+    // Act 2: the line.
+    at(t, () => secret.classList.add('in'));
+    t += 1100;
+    for (let i = 1; i <= 8; i++) at(t + i * 160, () => { dots.textContent = '.'.repeat(i); });
+    t += 8 * 160 + 500;
+    at(t, () => { answer.hidden = false; answer.classList.add('in'); });
+    t += 1800;
+    // Act 3: the fire, then the form.
+    at(t, () => { fire.hidden = false; fire.classList.add('in'); });
+    t += 1600;
+    at(t, () => { form.hidden = false; requestAnimationFrame(() => form.classList.add('in')); skip.hidden = true; });
+  }
+
+  skip.addEventListener('click', showEnd);
+  if (reduced) showEnd(); else play();
+
+  const note = document.getElementById('note');
+  const go = document.getElementById('go');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      note.className = 'note';
+      note.textContent = 'that email doesn’t look right. check it and try again.';
+      return;
+    }
+    if (!KIT_FORM_ID) {
+      note.className = 'note';
+      note.textContent = 'sign-ups open very soon. check back in a bit.';
+      return;
+    }
+    go.disabled = true;
+    note.className = 'note';
+    note.textContent = 'adding u…';
+    try {
+      const body = new FormData();
+      body.append('email_address', email);
+      // Kit doesn't let pages read its reply, so a sent request counts as done.
+      await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, { method: 'POST', body, mode: 'no-cors' });
+      note.className = 'note ok';
+      note.textContent = 'you’re in. check your inbox to confirm. now go live.';
+      form.querySelector('input').value = '';
+    } catch {
+      note.className = 'note';
+      note.textContent = 'that didn’t go through. check your connection and try again.';
+    } finally {
+      go.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
