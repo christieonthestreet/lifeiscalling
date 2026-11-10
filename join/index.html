@@ -6,7 +6,7 @@
 <title>Life Is Calling</title>
 <meta name="description" content="The secret to happiness is remembering you're gonna die. Get early access to Life Is Calling.">
 <meta name="theme-color" content="#000000">
-<meta property="og:title" content="the secret to happiness is…">
+<meta property="og:title" content="what if the secret to happiness was…">
 <meta property="og:description" content="remembering you're gonna die. early access to Life Is Calling.">
 <link rel="icon" href="../icon.png">
 <link rel="apple-touch-icon" href="../icon.png">
@@ -64,6 +64,7 @@
   @keyframes pop { from { transform: scale(0) rotate(-20deg); } to { transform: scale(1) rotate(0); } }
   @keyframes sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
   .bubble {
+    transition-property: opacity, transform;
     background: var(--white); color: #000; font-weight: 600; font-size: 17px; padding: 9px 16px; border-radius: 18px;
     position: relative; opacity: 0; transform: scale(0.6);
     transition: opacity 0.25s ease 0.45s, transform 0.35s cubic-bezier(.2,1.8,.4,1) 0.45s;
@@ -113,7 +114,7 @@
 <div id="noise" aria-hidden="true"></div>
 
 <main id="stage">
-  <p class="secret fade" id="secret">the secret to happiness, is <span class="dots" id="dots"></span></p>
+  <p class="secret fade" id="secret">what if the secret to happiness was <span class="dots" id="dots"></span></p>
   <h1 class="answer" id="answer" hidden>remembering you’re gonna die.</h1>
   <div class="fire" id="fire" hidden>
     <img src="../flame.png" alt="The Life Is Calling fire" width="160" height="245">
@@ -249,7 +250,13 @@
     ageForm.hidden = true;
     document.getElementById('secret').hidden = true;
     answer.hidden = true;
-    fire.querySelector('.bubble').textContent = age >= LIFE_YEARS ? 'bonus round. respect.' : 'it’s still going up btw.';
+    const bubble = fire.querySelector('.bubble');
+    bubble.textContent = age >= LIFE_YEARS ? 'bonus round. respect.' : 'it’s still going up btw.';
+    // Then the fire says why it's here.
+    setTimeout(() => {
+      bubble.style.opacity = 0;
+      setTimeout(() => { bubble.textContent = 'i’m here to remind you every day.'; bubble.style.opacity = 1; }, 250);
+    }, 2600);
     const started = Date.now();
     // Counts up from 0 to the real number, then keeps ticking with every moment u spend here.
     const target = () => ((age * YEAR_MS + (Date.now() - started)) / (LIFE_YEARS * YEAR_MS)) * 100;
