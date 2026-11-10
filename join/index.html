@@ -36,6 +36,13 @@
   }
   .word.on { animation: flicker 0.42s steps(1, end) forwards; }
   .word.long.on { animation-duration: 0.75s; }
+  .word.punch.on { animation: punch 0.85s cubic-bezier(.2,1.4,.4,1) forwards; }
+  @keyframes punch {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+    12% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+  }
   @keyframes flicker {
     0% { opacity: 1; } 18% { opacity: 0.15; } 30% { opacity: 1; } 70% { opacity: 1; } 82% { opacity: 0.3; } 100% { opacity: 0; }
   }
@@ -153,9 +160,11 @@
   const KIT_FORM_ID = '';
 
   // The noise in your head. Short ones flash big, long ones wrap. Change the words here.
+  // The first few hit one at a time, big and centred. Then the rest pile in.
+  const PUNCH = ['I HATE MYSELF.', "I'M SCARED.", 'WHY DID I DO THAT??', 'I SHOULD HAVE...', 'NEXT YEAR.'];
   const WORDS = [
-    "I'LL DECIDE LATER.", "I'M SCARED.", 'NEXT YEAR.', "BUT I DON'T LIKE CONFRONTATION.",
-    "I'LL DO IT TOMORROW.", "I'M JEALOUS.", 'I HATE THEM.', "I'LL NEVER FORGIVE THEM.",
+    'I HATE THEM.', "I'LL DECIDE LATER.", "BUT I DON'T LIKE CONFRONTATION.",
+    "I'LL DO IT TOMORROW.", "I'M JEALOUS.", "I'LL NEVER FORGIVE THEM.",
     "I WISH I DIDN'T WASTE SO MUCH TIME.", 'IF I JUST TOOK THAT OPPORTUNITY.', 'IF I JUST INVESTED IN BITCOIN.',
     'HALF THE DAY IS GONE.', 'I WOKE UP LATE. MY DAY IS RUINED.', 'HOW COULD THEY DO THAT TO ME?',
     'I SHOULD HAVE STARTED YOUTUBE IN 2016.', 'COVID RUINED EVERYTHING.', "WHY DIDN'T I DANCE ON TIKTOK IN 2020?",
@@ -176,12 +185,12 @@
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function flash(text, stay) {
+  function flash(text, stay, punch) {
     const el = document.createElement('div');
-    el.className = text.length > 16 ? 'word long' : 'word';
+    el.className = punch ? 'word punch' : text.length > 16 ? 'word long' : 'word';
     el.textContent = text;
     const w = window.innerWidth, h = window.innerHeight;
-    const long = text.length > 16;
+    const long = !punch && text.length > 16;
     el.style.fontSize = Math.min(w * (long ? 0.085 : 0.12), long ? 64 : 96) + 'px';
     if (long) {
       el.style.whiteSpace = 'normal';
@@ -193,13 +202,14 @@
     const maxW = w * 0.9;
     if (el.offsetWidth > maxW) el.style.fontSize = (parseFloat(el.style.fontSize) * maxW / el.offsetWidth) + 'px';
     const halfW = el.offsetWidth / 2, halfH = el.offsetHeight / 2;
-    const x = stay ? w / 2 : halfW + w * 0.05 + Math.random() * Math.max(0, w * 0.9 - halfW * 2);
-    const y = stay ? h / 2 : halfH + h * 0.08 + Math.random() * Math.max(0, h * 0.84 - halfH * 2);
+    const centre = stay || punch;
+    const x = centre ? w / 2 : halfW + w * 0.05 + Math.random() * Math.max(0, w * 0.9 - halfW * 2);
+    const y = centre ? h / 2 : halfH + h * 0.08 + Math.random() * Math.max(0, h * 0.84 - halfH * 2);
     el.style.left = x + 'px';
     el.style.top = y + 'px';
-    el.style.transform = `translate(-50%, -50%) rotate(${stay ? 0 : (Math.random() * 8 - 4)}deg)`;
+    el.style.transform = `translate(-50%, -50%) rotate(${centre ? 0 : (Math.random() * 8 - 4)}deg)`;
     requestAnimationFrame(() => el.classList.add(stay ? 'stay' : 'on'));
-    if (!stay) setTimeout(() => el.remove(), 900);
+    if (!stay) setTimeout(() => el.remove(), punch ? 1000 : 900);
   }
 
   function showEnd() {
@@ -283,7 +293,11 @@
 
   function play() {
     // Act 1: the noise speeds up.
-    let t = 300;
+    let t = 400;
+    PUNCH.forEach((word) => {
+      at(t, () => flash(word, false, true));
+      t += 950;
+    });
     // Each once, slow enough to read at first, then faster and faster, then the short ones again in a blur.
     const blur = WORDS.filter((w) => w.length <= 12).sort(() => Math.random() - 0.5);
     WORDS.forEach((word, i) => {
