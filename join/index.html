@@ -94,6 +94,21 @@
     padding: 16px 20px; cursor: pointer;
   }
   button:disabled { opacity: 0.6; cursor: default; }
+  /* "show me": the melty blue / pink / coral / gold gradient, slowly flowing. */
+  #showMe {
+    color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+    background: radial-gradient(circle at 20% 30%, #ff4fd8 0%, transparent 45%),
+                radial-gradient(circle at 80% 70%, #f2c94c 0%, transparent 40%),
+                linear-gradient(115deg, #3d7bff 0%, #b98cff 22%, #ff5fcf 42%, #ff5a5a 62%, #f2c94c 78%, #3d7bff 100%);
+    background-size: 160% 160%, 160% 160%, 200% 100%;
+    animation: melt 6s ease-in-out infinite alternate;
+    box-shadow: 0 0 28px rgba(255, 95, 207, 0.35), 0 0 46px rgba(61, 123, 255, 0.25);
+  }
+  @keyframes melt {
+    0% { background-position: 0% 0%, 100% 100%, 0% 50%; }
+    100% { background-position: 100% 100%, 0% 0%, 100% 50%; }
+  }
+  @media (prefers-reduced-motion: reduce) { #showMe { animation: none; } }
   button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
   .ageInput::-webkit-outer-spin-button, .ageInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .ageInput { -moz-appearance: textfield; width: 100%; font: inherit; font-size: 17px; color: var(--white); background: #111; border: 1px solid #333; border-radius: 999px; padding: 15px 20px; text-align: center; outline: none; }
