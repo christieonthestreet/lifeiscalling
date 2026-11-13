@@ -161,17 +161,16 @@
 
   // The noise in your head. Short ones flash big, long ones wrap. Change the words here.
   // The first few hit one at a time, big and centred. Then the rest pile in.
-  const PUNCH = ['I SHOULD HAVE STARTED EARLIER.', "IT'S TOO LATE..", "I'M TOO OLD...", 'WHY AM I LIKE THIS?', "I'M SCARED.", 'WHY DID I DO THAT??', 'NEXT YEAR.', 'ONE DAY...'];
+  const PUNCH = ['I SHOULD HAVE STARTED EARLIER.', "IT'S TOO LATE..", "I'M TOO OLD...", "I'M SCARED.", 'NEXT YEAR.', 'ONE DAY...'];
   const WORDS = [
-    'I HATE THEM.', "I'LL DECIDE LATER.", "BUT I DON'T LIKE CONFRONTATION.",
-    "I'LL DO IT TOMORROW.", "I'M JEALOUS.", "I'LL NEVER FORGIVE THEM.",
+    'I HATE THEM.', "I'LL NEVER FORGIVE THEM.",
     "I WISH I DIDN'T WASTE SO MUCH TIME.", 'IF I JUST TOOK THAT OPPORTUNITY.', 'IF I JUST INVESTED IN BITCOIN.',
     'HALF THE DAY IS GONE.', 'I WOKE UP LATE. MY DAY IS RUINED.', 'HOW COULD THEY DO THAT TO ME?',
     'I SHOULD HAVE STARTED YOUTUBE IN 2016.', 'COVID RUINED EVERYTHING.', "WHY DIDN'T I DANCE ON TIKTOK IN 2020?",
     "I'LL CALL THEM TOMORROW.", "BUT WHAT IF I CAN'T DO IT?", 'IDK IF I CAN DO IT..', 'SORRY I MISSED YOUR BIRTHDAY.',
     'SHOULD I TEXT THEM?', 'BUT WHAT IF THEY LAUGH..', 'I COULD NEVER DO THAT.', "WHAT IF I CAN'T FIND SOMEONE BETTER?",
     "IT'S TOO COMPETITIVE.", "I'M NOT TALENTED ENOUGH.", 'WHO AM I TO DO THAT?', 'WHAT WILL PEOPLE THINK?',
-    "I'LL QUIT MY JOB NEXT YEAR.", "IT'S TOO LATE TO CHANGE CAREERS.", "I'LL START WHEN I'M READY.",
+    "IT'S TOO LATE TO CHANGE CAREERS.", "I'LL START WHEN I'M READY.",
     "WHAT IF I'M ALONE FOREVER?", 'I SHOULD HAVE STARTED LAST YEAR.', 'BUT WHAT IF I FAIL?',
   ];
   const LAST = 'BUT WHAT IF.....';
@@ -298,17 +297,18 @@
     let t = 400;
     PUNCH.forEach((word) => {
       at(t, () => flash(word, false, true));
-      t += 950;
+      t += 900;
     });
     // Each once, slow enough to read at first, then faster and faster, then the short ones again in a blur.
     const blur = WORDS.filter((w) => w.length <= 12).sort(() => Math.random() - 0.5);
     WORDS.forEach((word, i) => {
       at(t, () => flash(word));
-      t += Math.max(260, (word.length > 16 ? 700 : 480) - i * 18);
+      // Starts readable, then speeds up hard: each one ~13% quicker than the last.
+      t += Math.max(90, (word.length > 16 ? 650 : 480) * Math.pow(0.87, i));
     });
     blur.forEach((word) => {
       at(t, () => flash(word));
-      t += 110;
+      t += 60;
     });
     at(t + 150, () => flash(LAST, true));
     t += 1500;
