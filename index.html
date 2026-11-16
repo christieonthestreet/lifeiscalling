@@ -18,7 +18,7 @@
 :root{
   --bg:#04070f; --bg2:#0a1428; --text:#f6f3ec; --muted:#9aa6b8; --line:rgba(255,255,255,.12);
   --sun:#f6dca6; --flame:#3d8bff; --ice:#9fd8ff;
-  --melt:linear-gradient(115deg,#3d7bff 0%,#b98cff 22%,#ff5fcf 42%,#ff5a5a 62%,#f2c94c 80%,#3d7bff 100%);
+  --melt:linear-gradient(115deg,#f79a7a 0%,#f5c99a 20%,#e6e2cf 36%,#67b8d6 54%,#7b98d6 72%,#d896c6 88%,#f79a7a 100%);
 }
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -42,7 +42,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:14px 24px;font-weight:600;font-size:16px;text-decoration:none;border:0;cursor:pointer;transition:transform .2s,box-shadow .2s}
 .btn:hover{transform:translateY(-2px)}
-.btn.melt{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.35);background:var(--melt);background-size:220% 100%;animation:melt 7s ease-in-out infinite alternate;box-shadow:0 0 28px rgba(255,95,207,.3),0 0 46px rgba(61,123,255,.22)}
+.btn.melt{color:#1d1b2e;background:var(--melt);background-size:220% 100%;animation:melt 7s ease-in-out infinite alternate;box-shadow:0 0 28px rgba(247,154,122,.35),0 0 46px rgba(103,184,214,.25)}
 .btn.ghost{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.04)}
 .btn.small{padding:9px 16px;font-size:14px}
 @keyframes melt{to{background-position:100% 0}}
@@ -52,7 +52,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;margin-bottom:22px}
 .kicker i{width:7px;height:7px;border-radius:50%;background:#3dff9a;box-shadow:0 0 10px #3dff9a}
 h1{font-weight:800;font-size:clamp(46px,8vw,96px);line-height:.95;letter-spacing:-3px}
-h1 em,h2 em{font-style:normal;background:linear-gradient(100deg,var(--sun),#ffb7e6 55%,var(--ice));-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 em,h2 em{font-style:normal;background:linear-gradient(100deg,#f79a7a,#f5c99a 30%,#d896c6 65%,#67b8d6);-webkit-background-clip:text;background-clip:text;color:transparent}
 .secret{font-weight:600;font-size:clamp(17px,2.2vw,22px);color:var(--sun);margin-bottom:14px;letter-spacing:-.3px}
 .lede{font-size:clamp(17px,2vw,20px);line-height:1.5;color:#c9d1dc;margin-top:22px;max-width:480px}
 .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
