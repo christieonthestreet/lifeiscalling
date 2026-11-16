@@ -54,6 +54,7 @@
     gap: 22px; text-align: center;
     padding: max(24px, env(safe-area-inset-top, 0px)) max(22px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(22px, env(safe-area-inset-left, 0px));
   }
+  @media (max-height: 760px) { #stage { gap: 14px; } .fire img { width: 76px; } }
   .fade { opacity: 0; transform: translateY(10px); transition: opacity 0.9s ease, transform 0.9s ease; }
   .fade.in { opacity: 1; transform: none; }
   .secret { font-size: clamp(22px, 4.5vw, 34px); color: var(--muted); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin: 0; text-wrap: balance; }
@@ -254,11 +255,13 @@
   const pctLabel = document.getElementById('pctLabel');
   const YEAR_MS = 365.25 * 24 * 60 * 60 * 1000;
   const LIFE_YEARS = 86; // the same rough starting guess the app uses
+  // After the keyboard closes, iPhone leaves the page scrolled down. Bring the fire back into view.
+  const toTop = () => setTimeout(() => { try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch { window.scrollTo(0, 0); } }, 120);
   const reveal = (el) => {
     el.hidden = false;
     requestAnimationFrame(() => {
       el.classList.add('in');
-      try { el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch {}
+      if (el.id === 'ageForm') { try { el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch {} }
     });
   };
 
@@ -281,6 +284,7 @@
       return;
     }
     document.getElementById('age').blur();
+    toTop();
     ageForm.hidden = true;
     document.getElementById('secret').hidden = true;
     answer.hidden = true;
@@ -383,6 +387,8 @@
       note.className = 'note ok';
       note.textContent = 'you’re on the list. now go live.';
       form.querySelector('input').value = '';
+      try { document.activeElement && document.activeElement.blur(); } catch {}
+      toTop();
     } catch {
       note.className = 'note';
       note.textContent = 'that didn’t go through. check your connection and try again.';
