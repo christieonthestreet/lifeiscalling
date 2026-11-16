@@ -144,6 +144,11 @@
   }
   [hidden] { display: none !important; }
   @media (prefers-reduced-motion: reduce) { .fire.in img, .answer.in { animation: none; } .fade { transition: none; } }
+  #guard { position: fixed; inset: 0; z-index: 50; background: rgb(0 0 0 / .72); display: flex; align-items: center; justify-content: center; padding: 16px; }
+  #guard .sheet { width: min(420px, 100%); background: #fff; color: #000; border-radius: 24px; padding: 16px 6px; text-align: center; }
+  #guard p { margin: 0 0 8px; font-weight: 600; }
+  #guard iframe { width: 100%; height: 520px; border: 0; border-radius: 12px; }
+  #guard button { margin-top: 10px; width: calc(100% - 20px); background: var(--sun); }
 </style>
 </head>
 <body>
@@ -368,6 +373,35 @@
   form.addEventListener('submit', (e) => e.preventDefault());
   document.getElementById('email').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); signUp(); } });
   go.addEventListener('click', signUp);
+  function done() {
+    note.className = 'note ok';
+    note.textContent = 'you’re on the list. now go live.';
+    form.querySelector('input').value = '';
+    toTop();
+  }
+  // Kit's security check, shown in a sheet over the page. Kit's page reports its size and when it's finished.
+  function showGuard(url) {
+    const wrap = document.createElement('div');
+    wrap.id = 'guard';
+    wrap.innerHTML = '<div class="sheet"><p>one quick check so we know you’re human 🔥</p><iframe title="Security check"></iframe><button type="button">i ticked it, i’m done</button></div>';
+    const frame = wrap.querySelector('iframe');
+    frame.src = url;
+    const close = (ok) => {
+      window.removeEventListener('message', onMsg);
+      wrap.remove();
+      if (ok) done(); else { note.className = 'note'; note.textContent = 'no stress. tap i’m in to try again.'; }
+    };
+    const onMsg = (e) => {
+      if (!/kit\.com$|convertkit\.com$/.test(new URL(e.origin).hostname)) return;
+      const d = e.data || {};
+      if (d.name === 'ckjs:guard:size' && d.height) frame.style.height = Math.min(d.height + 10, 560) + 'px';
+      if (d.name === 'ckjs:guard:success' || d.name === 'ckjs:guard:subscribed') close(true);
+    };
+    window.addEventListener('message', onMsg);
+    wrap.querySelector('button').addEventListener('click', () => close(true));
+    wrap.addEventListener('click', (e) => { if (e.target === wrap) close(false); });
+    document.body.appendChild(wrap);
+  }
   async function signUp() {
     if (go.disabled) return;
     const email = document.getElementById('email').value.trim();
@@ -387,13 +421,20 @@
     try {
       const body = new FormData();
       body.append('email_address', email);
-      // Kit doesn't let pages read its reply, so a sent request counts as done.
-      await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, { method: 'POST', body, mode: 'no-cors' });
-      note.className = 'note ok';
-      note.textContent = 'you’re on the list. now go live.';
-      form.querySelector('input').value = '';
+      const res = await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, {
+        method: 'POST', body, headers: { Accept: 'application/json' },
+      });
+      const data = await res.json().catch(() => ({}));
       try { document.activeElement && document.activeElement.blur(); } catch {}
-      toTop();
+      if (data.status === 'quarantined' && data.url) {
+        // Kit wants a quick "not a robot" check before it adds the email.
+        note.className = 'note';
+        note.textContent = 'one quick check and you’re in.';
+        showGuard(data.url);
+        return;
+      }
+      if (!res.ok || data.status === 'failed') throw new Error('kit said no');
+      done();
     } catch {
       note.className = 'note';
       note.textContent = 'that didn’t go through. check your connection and try again.';
