@@ -53,6 +53,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .kicker i{width:7px;height:7px;border-radius:50%;background:#3dff9a;box-shadow:0 0 10px #3dff9a}
 h1{font-weight:800;font-size:clamp(46px,8vw,96px);line-height:.95;letter-spacing:-3px}
 h1 em,h2 em{font-style:normal;background:linear-gradient(100deg,var(--sun),#ffb7e6 55%,var(--ice));-webkit-background-clip:text;background-clip:text;color:transparent}
+.secret{font-weight:600;font-size:clamp(17px,2.2vw,22px);color:var(--sun);margin-bottom:14px;letter-spacing:-.3px}
 .lede{font-size:clamp(17px,2vw,20px);line-height:1.5;color:#c9d1dc;margin-top:22px;max-width:480px}
 .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 .soon{font-size:13px;color:var(--muted);margin-top:16px}
@@ -141,7 +142,7 @@ footer .links{gap:18px}
 #intro.gone{opacity:0;pointer-events:none}
 #intro .say{font-weight:800;font-size:clamp(34px,8vw,88px);letter-spacing:-2px;line-height:1;text-align:center;padding:0 24px;color:#f6f3ec}
 #intro .say.pop{animation:punch .5s ease-out}
-#intro .say.soft{font-weight:600;letter-spacing:-1px;color:var(--sun)}
+#intro .say.soft{font-weight:600;letter-spacing:-1px;color:var(--sun);font-size:clamp(28px,6vw,64px);max-width:900px}
 #intro button{position:absolute;bottom:28px;right:24px;background:none;border:1px solid rgba(255,255,255,.3);color:var(--muted);border-radius:999px;padding:8px 16px;font:500 14px Inter,sans-serif;cursor:pointer}
 @keyframes punch{from{transform:scale(1.25);opacity:0}}
 @media (prefers-reduced-motion:reduce){.track,.btn.melt,.closing img.fire{animation:none}.reveal{opacity:1;transform:none;transition:none}}
@@ -166,6 +167,7 @@ footer .links{gap:18px}
   <header class="hero">
     <div>
       <div class="kicker"><i></i>now in beta on iPhone</div>
+      <p class="secret">the secret to happiness? remembering you’re gonna die.</p>
       <h1>stop waiting for <em>tomorrow.</em></h1>
       <p class="lede">a little fire that reminds you, a few times a day, that you're going to die. so you stop overthinking, stop saving your life for later, and actually go live.</p>
       <div class="ctas">
@@ -277,7 +279,9 @@ footer .links{gap:18px}
   const show = (text, soft) => { say.textContent = text; say.className = 'say' + (soft ? ' soft' : ''); void say.offsetWidth; say.classList.add('pop'); };
   let t = 300;
   LINES.forEach(line => { timers.push(setTimeout(() => show(line), t)); t += 650; });
-  timers.push(setTimeout(() => show('but what if.....', true), t)); t += 1600;
+  timers.push(setTimeout(() => show('but what if.....', true), t)); t += 1500;
+  timers.push(setTimeout(() => show('what if the secret to happiness was ........', true), t)); t += 2300;
+  timers.push(setTimeout(() => show('remembering you’re gonna die.'), t)); t += 2600;
   const end = () => { timers.forEach(clearTimeout); intro.classList.add('gone'); document.documentElement.style.overflow = ''; setTimeout(() => intro.remove(), 1000); };
   timers.push(setTimeout(end, t));
   document.getElementById('skipIntro').addEventListener('click', end);
