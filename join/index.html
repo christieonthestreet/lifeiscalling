@@ -180,7 +180,7 @@
 <script>
   // ── Where sign-ups go ──────────────────────────────────────────────
   // Paste your Kit form id here once the Kit account exists (the number in the form's embed link).
-  const KIT_FORM_ID = '';
+  const KIT_FORM_ID = '10197159';
 
   // The noise in your head. Short ones flash big, long ones wrap. Change the words here.
   // The first few hit one at a time, big and centred. Then the rest pile in.
@@ -381,7 +381,7 @@
       // Kit doesn't let pages read its reply, so a sent request counts as done.
       await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, { method: 'POST', body, mode: 'no-cors' });
       note.className = 'note ok';
-      note.textContent = 'you’re in. check your inbox to confirm. now go live.';
+      note.textContent = 'you’re on the list. now go live.';
       form.querySelector('input').value = '';
     } catch {
       note.className = 'note';
