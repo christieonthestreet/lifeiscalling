@@ -192,6 +192,8 @@
   // ── Where sign-ups go ──────────────────────────────────────────────
   // Paste your Kit form id here once the Kit account exists (the number in the form's embed link).
   const KIT_FORM_ID = '10197159';
+  // Kit's public key (the v3 "API Key", not the secret): it can only add people to forms, so it's safe in a web page.
+  const KIT_PUBLIC_KEY = 'WGpUyz0uVnqlYhpKGisKcQ';
 
   // The noise in your head. Short ones flash big, long ones wrap. Change the words here.
   // The first few hit one at a time, big and centred. Then the rest pile in.
@@ -419,21 +421,15 @@
     note.className = 'note';
     note.textContent = 'adding u…';
     try {
-      const body = new FormData();
-      body.append('email_address', email);
-      const res = await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, {
-        method: 'POST', body, headers: { Accept: 'application/json' },
+      // Straight onto the list through Kit's API: no "not a robot" check.
+      const res = await fetch(`https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ api_key: KIT_PUBLIC_KEY, email }),
       });
       const data = await res.json().catch(() => ({}));
       try { document.activeElement && document.activeElement.blur(); } catch {}
-      if (data.status === 'quarantined' && data.url) {
-        // Kit wants a quick "not a robot" check before it adds the email.
-        note.className = 'note';
-        note.textContent = 'one quick check and you’re in.';
-        showGuard(data.url);
-        return;
-      }
-      if (!res.ok || data.status === 'failed') throw new Error('kit said no');
+      if (!res.ok || !data.subscription) throw new Error('kit said no');
       done();
     } catch {
       note.className = 'note';
