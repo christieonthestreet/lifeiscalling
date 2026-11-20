@@ -124,6 +124,33 @@ h2{font-weight:800;font-size:clamp(36px,5.4vw,64px);line-height:1.02;letter-spac
 .weeks .big{font-weight:800;font-size:clamp(34px,5vw,52px);letter-spacing:-1.5px;font-variant-numeric:tabular-nums}
 .weeks .note{color:var(--muted);font-size:14px}
 
+/* join: the fire, your age, your %, then your email */
+.joinflow{padding:110px 0}
+.jfire{position:relative;display:inline-flex;flex-direction:column;align-items:center;margin-bottom:22px}
+.jfire img{width:96px;animation:float 4s ease-in-out infinite}
+.bubble{background:#f6f3ec;color:#0a0d16;font-weight:700;font-size:18px;padding:12px 18px;border-radius:20px;margin-bottom:16px;position:relative;white-space:nowrap}
+.bubble:after{content:"";position:absolute;left:50%;bottom:-8px;width:16px;height:16px;background:#f6f3ec;transform:translateX(-50%) rotate(45deg);border-radius:3px}
+.jage{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center;margin-top:30px}
+.jage .age input{width:96px}
+.jresult{margin-top:40px}
+.jpct{font-weight:800;font-size:clamp(40px,9vw,76px);letter-spacing:-2px;font-variant-numeric:tabular-nums;line-height:1}
+.jlabel{color:var(--muted);font-size:20px;margin-top:6px}
+.jbar{width:min(520px,100%);height:12px;border-radius:99px;background:#1f2a40;margin:22px auto 14px;overflow:hidden}
+.jbar div{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#ff4b3e,#f6dca6);transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.jsecs{font-size:18px}.jsecs b{font-variant-numeric:tabular-nums}
+.fine{color:var(--muted);font-size:13px;margin-top:10px;line-height:1.5}
+.jform,.jshare{display:flex;flex-direction:column;gap:12px;width:min(420px,100%);margin:44px auto 0}
+.jpitch{font-weight:700;font-size:20px;line-height:1.35;margin-bottom:6px}
+.jform input{font:inherit;font-size:17px;color:var(--text);background:rgba(255,255,255,.06);border:1px solid rgb(255 255 255 / .22);border-radius:999px;padding:15px 20px;text-align:center;outline:none}
+.jform input:focus{border-color:var(--sun)}
+.jnote{min-height:20px;color:var(--sun);font-weight:600}
+.jshare h3{font-size:28px;letter-spacing:-.5px}
+.jshare p{color:#c9d1dc;font-size:16px;line-height:1.5}.jshare p b{color:var(--text)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.joinflow [hidden]{display:none!important}
+button.btn{font-family:inherit}
+.btn.ghost{color:var(--text)}
+
 /* quote band */
 .band{text-align:center;padding:120px 0}
 .band h2{font-size:clamp(40px,7vw,84px)}
@@ -162,7 +189,7 @@ footer .links{gap:18px}
   <div class="links">
     <a class="hide-sm" href="#how">how it works</a>
     <a class="hide-sm" href="./support.html">support</a>
-    <a class="btn melt small" href="./join/">join the waitlist</a>
+    <a class="btn melt small" href="#join">join the waitlist</a>
   </div>
 </div></nav>
 
@@ -175,7 +202,7 @@ footer .links{gap:18px}
       <h1>stop waiting for <em>tomorrow.</em></h1>
       <p class="lede">a little fire that reminds you, a few times a day, that you're going to die. so you stop overthinking, stop saving your life for later, and actually go live.</p>
       <div class="ctas">
-        <a class="btn melt" href="./join/">join the waitlist</a>
+        <a class="btn melt" href="#join">join the waitlist</a>
         <a class="btn ghost" href="https://testflight.apple.com/join/TR5dwAcK">try the iPhone beta</a>
       </div>
       <p class="soon">coming soon to the App Store and Google Play</p>
@@ -198,9 +225,48 @@ footer .links{gap:18px}
       <div class="pills"><span class="pill">normal mode</span><span class="pill">unhinged mode 🔥</span><span class="pill">breathe</span><span class="pill">reflections</span></div>
     </div>
     <div class="art notifs" aria-label="Example reminders">
-      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>now</span></div><p><b>tomorrow isn't promised.</b> today is. what's the first step?</p></div></div>
-      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>2h ago</span></div><p><b>U DYING BABE</b> what's happening with start my youtube??</p></div></div>
-      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>5h ago</span></div><p><b>remember, you're going to die.</b> so what would you do today if you weren't scared?</p></div></div>
+      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>now</span></div><p><b>remember, you're going to die.</b> so what are you doing today?</p></div></div>
+      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>2h ago</span></div><p><b>U DYING BABE 💀</b> and you're still scrolling??</p></div></div>
+      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>5h ago</span></div><p><b>don't forget, you're gonna die.</b> life is calling. pick up.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="join" class="joinflow">
+  <div class="wrap center reveal">
+    <div class="jfire">
+      <div class="bubble">you’re dying rn, bish 💀</div>
+      <img src="./flame.png" alt="The Life Is Calling fire">
+    </div>
+    <h2>how long <em>have you got?</em></h2>
+    <form id="ageCalc" class="jage" novalidate>
+      <label class="age">i'm <input id="jAge" type="number" inputmode="numeric" min="1" max="99" placeholder="29" aria-label="your age"> years old</label>
+      <button class="btn melt" type="submit">show me</button>
+    </form>
+
+    <div id="jResult" class="jresult" hidden>
+      <p class="jpct"><span id="jPct">0.00000000</span>%</p>
+      <p class="jlabel">of your life, gone.</p>
+      <div class="jbar" aria-hidden="true"><div id="jUsed"></div></div>
+      <p class="jsecs"><b id="jSecs">0</b> seconds left. if you’re lucky 😉</p>
+      <p class="fine">a rough guess from an average life of 80 years.</p>
+    </div>
+
+    <form id="jForm" class="jform" hidden novalidate>
+      <p class="jpitch">so don’t waste them.<br>get the app first, plus founder perks.</p>
+      <label class="sr" for="jEmail">your email</label>
+      <input id="jEmail" type="email" inputmode="email" autocomplete="email" placeholder="your email" required>
+      <button class="btn melt" type="submit" id="jGo">i’m in</button>
+      <p class="jnote" id="jNote" role="status"></p>
+      <p class="fine">by signing up you agree to get emails about the app. unsubscribe anytime. <a href="./privacy.html">privacy</a></p>
+    </form>
+
+    <div id="jShare" class="jshare" hidden>
+      <h3>want it for free? 🔥</h3>
+      <p>invite 3 friends. when 3 of them join, you get <b>3 months of premium free</b> at launch.</p>
+      <button class="btn melt" type="button" id="jShareBtn">share with a friend</button>
+      <button class="btn ghost" type="button" id="jCopyBtn">copy my invite link</button>
+      <p class="fine" id="jShareNote" role="status">life’s too short to go alone.</p>
     </div>
   </div>
 </section>
@@ -256,7 +322,7 @@ footer .links{gap:18px}
     <h2>life is calling.<br>are you going to <em>pick up?</em></h2>
     <p class="sub" style="margin:18px auto 0">get it first when it launches, plus founder perks.</p>
     <div class="ctas" style="margin-top:28px">
-      <a class="btn melt" href="./join/">join the waitlist</a>
+      <a class="btn melt" href="#join">join the waitlist</a>
       <a class="btn ghost" href="https://testflight.apple.com/join/TR5dwAcK">try the iPhone beta</a>
     </div>
     <p class="soon">on android? email christieonthestreet@gmail.com with "android beta".</p>
@@ -353,6 +419,72 @@ setInterval(() => { heroSecs.textContent = Math.floor((heroEnd - Date.now()) / 1
   }
   c.height = Math.ceil(ROWS) * (c.width / COLS);
   input.addEventListener('input', set); set();
+})();
+
+// join: age → your % → email → invite 3 friends
+(() => {
+  const KIT_FORM_ID = '10197159';
+  const KIT_PUBLIC_KEY = 'WGpUyz0uVnqlYhpKGisKcQ'; // Kit's public v3 key: it can only add people to forms
+  const LIFE = 80 * 365.25 * 864e5;
+  const $ = (id) => document.getElementById(id);
+  const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+  // invites: everyone gets a code; a friend's link (?ref=code) is remembered and saved to Kit with their sign-up
+  const refIn = (new URLSearchParams(location.search).get('ref') || '').replace(/[^a-z0-9]/gi, '').slice(0, 12);
+  if (refIn) store.set('lic-referred-by', refIn);
+  let myCode = store.get('lic-ref-code');
+  if (!myCode) { myCode = Math.random().toString(36).slice(2, 9); store.set('lic-ref-code', myCode); }
+  const link = () => `https://christieonthestreet.github.io/lifeiscalling/?ref=${myCode}#join`;
+  const text = 'this app reminds you you’re going to die (in a good way 😅). join the waitlist with my link:';
+
+  let born = 0, tick;
+  $('ageCalc').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const age = Math.min(99, Math.max(1, +$('jAge').value || 0));
+    if (!$('jAge').value) { $('jAge').focus(); return; }
+    $('jAge').blur();
+    born = Date.now() - age * 365.25 * 864e5 - 182 * 864e5; // middle of that year of age
+    $('jResult').hidden = false; $('jForm').hidden = false;
+    clearInterval(tick);
+    const draw = () => {
+      const gone = Math.min(1, (Date.now() - born) / LIFE);
+      $('jPct').textContent = (gone * 100).toFixed(8);
+      $('jUsed').style.width = (gone * 100) + '%';
+      $('jSecs').textContent = Math.max(0, Math.floor((born + LIFE - Date.now()) / 1000)).toLocaleString('en-AU');
+    };
+    requestAnimationFrame(draw); tick = setInterval(draw, 80);
+    setTimeout(() => $('jResult').scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+  });
+
+  $('jForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $('jEmail').value.trim(), note = $('jNote');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { note.textContent = 'that email doesn’t look right. check it and try again.'; return; }
+    $('jGo').disabled = true; note.textContent = 'adding u…';
+    try {
+      const res = await fetch(`https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ api_key: KIT_PUBLIC_KEY, email, fields: { ref_code: myCode, referred_by: store.get('lic-referred-by') || '' } }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.subscription) throw new Error('kit said no');
+      $('jEmail').value = ''; $('jEmail').blur();
+      note.textContent = 'you’re on the list. now go live.';
+      $('jShare').hidden = false;
+      setTimeout(() => $('jShare').scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
+    } catch {
+      note.textContent = 'that didn’t go through. check your connection and try again.';
+    } finally { $('jGo').disabled = false; }
+  });
+
+  async function copy() {
+    try { await navigator.clipboard.writeText(`${text} ${link()}`); $('jShareNote').textContent = 'copied. paste it to your group chat.'; }
+    catch { $('jShareNote').textContent = link(); }
+  }
+  $('jShareBtn').addEventListener('click', async () => {
+    if (navigator.share) { try { await navigator.share({ title: 'life is calling', text, url: link() }); $('jShareNote').textContent = 'sent. you’re a good friend. 🔥'; } catch {} }
+    else copy();
+  });
+  $('jCopyBtn').addEventListener('click', copy);
 })();
 
 // fade sections in as you scroll
