@@ -125,7 +125,7 @@ h2{font-weight:800;font-size:clamp(36px,5.4vw,64px);line-height:1.02;letter-spac
 .weeks .note{color:var(--muted);font-size:14px}
 
 /* join: the fire, your age, your %, then your email */
-.joinflow{min-height:72vh;min-height:72dvh;display:flex;align-items:center;padding:40px 0 30px}
+.joinflow{min-height:calc(100vh - 64px);min-height:calc(100dvh - 64px);display:flex;align-items:center;padding:40px 0 60px}
 .joinflow>.wrap{width:100%}
 .joinflow .jfire img,.joinflow .bubble,.joinflow .jq,.joinflow .jage{opacity:0}
 .joinflow.go .jfire img{animation:popIn .7s cubic-bezier(.2,1.6,.4,1) .1s both,float 4s ease-in-out 1s infinite}
@@ -243,7 +243,7 @@ footer .links{gap:18px}
   </div>
 </section>
 
-<section id="how" style="padding-top:20px">
+<section id="how">
   <div class="wrap feature reveal">
     <div class="text">
       <div class="eyebrow">the reminders</div>
