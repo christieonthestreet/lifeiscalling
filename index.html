@@ -136,6 +136,15 @@ h2{font-weight:800;font-size:clamp(36px,5.4vw,64px);line-height:1.02;letter-spac
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.joinflow .jfire img,.joinflow .bubble,.joinflow .jq,.joinflow .jage{opacity:1;animation:none!important}}
 #intro .say.red{color:#ff4b3e}
+/* once they've put in their age: the fire and question step aside so their number and the email box fit on one screen */
+.joinflow.calc{align-items:flex-start;padding-top:22px}
+.joinflow.calc .jfire,.joinflow.calc .jq{display:none}
+.joinflow.calc .jage{margin-top:0;gap:10px}
+.joinflow.calc .jresult{margin-top:22px}
+.joinflow.calc .jbar{margin:14px auto 10px}
+.joinflow.calc .jform{margin-top:24px;gap:10px}
+.joinflow.calc .jpitch{font-size:18px;margin-bottom:2px}
+@media (max-height:720px){.joinflow.calc .jresult .fine{display:none}.joinflow.calc .jpct{font-size:44px}}
 .jfire{position:relative;display:inline-flex;flex-direction:column;align-items:center;margin-bottom:22px}
 .jfire img{width:96px;animation:float 4s ease-in-out infinite}
 .bubble{background:#f6f3ec;color:#0a0d16;font-weight:700;font-size:18px;padding:12px 18px;border-radius:20px;margin-bottom:16px;position:relative;white-space:nowrap}
@@ -225,7 +234,7 @@ footer .links{gap:18px}
     </div>
 
     <form id="jForm" class="jform" hidden novalidate>
-      <p class="jpitch">so don’t waste them.<br>get the app first, plus founder perks.</p>
+      <p class="jpitch">so don’t waste them. get the app first.</p>
       <label class="sr" for="jEmail">your email</label>
       <input id="jEmail" type="email" inputmode="email" autocomplete="email" placeholder="your email" required>
       <button class="btn melt" type="submit" id="jGo">i’m in</button>
@@ -456,6 +465,8 @@ setInterval(() => { heroSecs.textContent = Math.floor((heroEnd - Date.now()) / 1
     $('jAge').blur();
     born = Date.now() - age * 365.25 * 864e5 - 182 * 864e5; // middle of that year of age
     $('jResult').hidden = false; $('jForm').hidden = false;
+    $('join').classList.add('calc');
+    window.scrollTo(0, 0);
     clearInterval(tick);
     // Ramp up from 0% to their real number over a few seconds, then keep ticking live.
     const started = performance.now(), RAMP = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3200;
