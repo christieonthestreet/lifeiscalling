@@ -100,6 +100,12 @@
     padding: 16px 20px; cursor: pointer;
   }
   button:disabled { opacity: 0.6; cursor: default; }
+  #share { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 420px; text-align: center; margin-top: 8px; }
+  #share h2 { margin: 0; font-size: 26px; letter-spacing: -0.5px; }
+  .shareWhy { margin: 0 0 6px; color: var(--muted, #aab3c5); font-size: 16px; line-height: 1.45; }
+  .shareWhy b { color: var(--white, #f6f3ec); }
+  #shareBtn { color: #1d1b2e; background: linear-gradient(115deg,#f79a7a 0%,#f5c99a 30%,#67b8d6 70%,#d896c6 100%); }
+  button.ghost { background: transparent; color: var(--white, #f6f3ec); border: 1px solid rgb(255 255 255 / .3); }
   /* "show me": the dreamy pastel gradient (coral, peach, cream, sky, periwinkle, orchid), slowly flowing. */
   #showMe {
     color: #1d1b2e;
@@ -184,6 +190,15 @@
     <p class="note" id="note" role="status"></p>
     <p class="fine">by signing up you agree to get emails about the app. unsubscribe anytime. <a href="../privacy.html">privacy</a></p>
   </form>
+
+  <!-- After signing up: invite friends for free premium. -->
+  <section id="share" class="fade" hidden aria-labelledby="shareTitle">
+    <h2 id="shareTitle">want it for free? 🔥</h2>
+    <p class="shareWhy">invite 3 friends. when 3 of them join the waitlist, you get <b>3 months of premium free</b> at launch.</p>
+    <button type="button" id="shareBtn">share with a friend</button>
+    <button type="button" id="copyBtn" class="ghost">copy my invite link</button>
+    <p class="fine" id="shareNote" role="status">life’s too short to go alone.</p>
+  </section>
 </main>
 
 <button id="skip" type="button">skip</button>
@@ -375,11 +390,36 @@
   form.addEventListener('submit', (e) => e.preventDefault());
   document.getElementById('email').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); signUp(); } });
   go.addEventListener('click', signUp);
+  // ── Invites ─────────────────────────────────────────────────────────
+  // Everyone gets their own short code. Their invite link carries it (?ref=code), and when a friend
+  // signs up Kit saves who invited them (custom fields "ref_code" and "referred_by").
+  const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+  const refIn = (new URLSearchParams(location.search).get('ref') || '').replace(/[^a-z0-9]/gi, '').slice(0, 12);
+  if (refIn) store.set('lic-referred-by', refIn);
+  let myCode = store.get('lic-ref-code');
+  if (!myCode) { myCode = Math.random().toString(36).slice(2, 9); store.set('lic-ref-code', myCode); }
+  const inviteLink = () => `https://christieonthestreet.github.io/lifeiscalling/join/?ref=${myCode}`;
+  const inviteText = 'this app reminds you you’re going to die (in a good way 😅). join the waitlist with my link:';
+  const shareNote = document.getElementById('shareNote');
+  document.getElementById('shareBtn').addEventListener('click', async () => {
+    if (navigator.share) {
+      try { await navigator.share({ title: 'life is calling', text: inviteText, url: inviteLink() }); shareNote.textContent = 'sent. you’re a good friend. 🔥'; } catch {}
+    } else copyLink();
+  });
+  document.getElementById('copyBtn').addEventListener('click', copyLink);
+  async function copyLink() {
+    try { await navigator.clipboard.writeText(`${inviteText} ${inviteLink()}`); shareNote.textContent = 'copied. paste it to your group chat.'; }
+    catch { shareNote.textContent = inviteLink(); }
+  }
+
   function done() {
     note.className = 'note ok';
     note.textContent = 'you’re on the list. now go live.';
     form.querySelector('input').value = '';
-    toTop();
+    const share = document.getElementById('share');
+    share.hidden = false;
+    requestAnimationFrame(() => share.classList.add('in', 'show'));
+    try { share.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch {}
   }
   // Kit's security check, shown in a sheet over the page. Kit's page reports its size and when it's finished.
   function showGuard(url) {
@@ -425,7 +465,11 @@
       const res = await fetch(`https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ api_key: KIT_PUBLIC_KEY, email }),
+        body: JSON.stringify({
+          api_key: KIT_PUBLIC_KEY,
+          email,
+          fields: { ref_code: myCode, referred_by: store.get('lic-referred-by') || '' },
+        }),
       });
       const data = await res.json().catch(() => ({}));
       try { document.activeElement && document.activeElement.blur(); } catch {}
