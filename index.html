@@ -128,6 +128,15 @@ h2{font-weight:800;font-size:clamp(36px,5.4vw,64px);line-height:1.02;letter-spac
 .joinflow{min-height:calc(100vh - 64px);min-height:calc(100dvh - 64px);display:flex;align-items:center;padding:56px 0 70px}
 .joinflow>.wrap{width:100%}
 html.locked #rest,html.locked footer{display:none}
+.joinflow .jfire img,.joinflow .bubble,.joinflow .jq,.joinflow .jage{opacity:0}
+.joinflow.go .jfire img{animation:popIn .7s cubic-bezier(.2,1.6,.4,1) .1s both,float 4s ease-in-out 1s infinite}
+.joinflow.go .bubble{animation:popIn .6s cubic-bezier(.2,1.6,.4,1) .9s both}
+.joinflow.go .jq{animation:rise .8s ease 1.9s both}
+.joinflow.go .jage{animation:rise .8s ease 2.5s both}
+@keyframes popIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.joinflow .jfire img,.joinflow .bubble,.joinflow .jq,.joinflow .jage{opacity:1;animation:none!important}}
+#intro .say.red{color:#ff4b3e}
 .peek{margin-top:26px;background:none;border:0;color:var(--muted);font:500 15px Inter,sans-serif;text-decoration:underline;cursor:pointer}
 .jfire{position:relative;display:inline-flex;flex-direction:column;align-items:center;margin-bottom:22px}
 .jfire img{width:96px;animation:float 4s ease-in-out infinite}
@@ -202,12 +211,12 @@ footer .links{gap:18px}
 
 <main>
 <section id="join" class="joinflow">
-  <div class="wrap center reveal">
+  <div class="wrap center">
     <div class="jfire">
-      <div class="bubble">you’re dying rn, bish 💀</div>
+      <div class="bubble">you’re dying rn, bish 😊</div>
       <img src="./flame.png" alt="The Life Is Calling fire">
     </div>
-    <h2>how long <em>have you got?</em></h2>
+    <h2 class="jq">how long <em>have you got?</em></h2>
     <form id="ageCalc" class="jage" novalidate>
       <label class="age">i'm <input id="jAge" type="number" inputmode="numeric" min="1" max="99" placeholder="29" aria-label="your age"> years old</label>
       <button class="btn melt" type="submit">show me</button>
@@ -351,17 +360,18 @@ footer .links{gap:18px}
   const intro = document.getElementById('intro'), say = document.getElementById('say');
   let seen = false;
   try { seen = sessionStorage.getItem('intro-seen') === '1'; sessionStorage.setItem('intro-seen', '1'); } catch (e) {}
-  if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { intro.remove(); return; }
+  const go = () => document.getElementById('join').classList.add('go');
+  if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { intro.remove(); go(); return; }
   document.documentElement.style.overflow = 'hidden';
   const LINES = ['I SHOULD HAVE STARTED EARLIER.', "IT'S TOO LATE..", "I'M TOO OLD...", "I'M SCARED.", 'WHAT WILL PEOPLE THINK?', 'NEXT YEAR.', 'ONE DAY...'];
   const timers = [];
-  const show = (text, soft) => { say.textContent = text; say.className = 'say' + (soft ? ' soft' : ''); void say.offsetWidth; say.classList.add('pop'); };
+  const show = (text, soft) => { say.textContent = text; say.className = 'say' + (soft === 'red' ? ' red' : soft ? ' soft' : ''); void say.offsetWidth; say.classList.add('pop'); };
   let t = 300;
   LINES.forEach(line => { timers.push(setTimeout(() => show(line), t)); t += 650; });
   timers.push(setTimeout(() => show('but what if.....', true), t)); t += 1500;
-  timers.push(setTimeout(() => show('what if the secret to happiness was ........', true), t)); t += 2300;
-  timers.push(setTimeout(() => show('remembering you’re gonna die.'), t)); t += 2600;
-  const end = () => { timers.forEach(clearTimeout); intro.classList.add('gone'); document.documentElement.style.overflow = ''; setTimeout(() => intro.remove(), 1000); };
+  timers.push(setTimeout(() => show('the secret to happiness was…', true), t)); t += 2100;
+  timers.push(setTimeout(() => show('remembering you’re gonna die.', 'red'), t)); t += 2600;
+  const end = () => { timers.forEach(clearTimeout); intro.classList.add('gone'); setTimeout(go, 500); document.documentElement.style.overflow = ''; setTimeout(() => intro.remove(), 1000); };
   timers.push(setTimeout(end, t));
   document.getElementById('skipIntro').addEventListener('click', end);
 })();
