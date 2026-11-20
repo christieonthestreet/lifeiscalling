@@ -53,6 +53,21 @@
   }
   .word.stay { animation: none; opacity: 1; color: var(--red); }
 
+  /* Below the fold: the reminders */
+  #what { padding: 60px 22px 90px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; }
+  #what .eyebrow { margin: 0; color: var(--muted); font-size: 13px; letter-spacing: 3px; }
+  #what h2 { margin: 0; max-width: 520px; font-size: clamp(26px, 5vw, 38px); line-height: 1.12; letter-spacing: -0.03em; text-wrap: balance; }
+  .notifs { display: flex; flex-direction: column; gap: 12px; width: min(380px, 100%); margin-top: 10px; }
+  .notif { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 22px; background: rgb(255 255 255 / .09); border: 1px solid rgb(255 255 255 / .12); text-align: left; }
+  .notif:nth-child(2) { opacity: .85; transform: scale(.97); }
+  .notif:nth-child(3) { opacity: .65; transform: scale(.94); }
+  .notif img { width: 38px; height: 38px; border-radius: 10px; background: #0a1830; padding: 4px; object-fit: contain; flex: none; }
+  .notif > div { flex: 1; }
+  .notif .t { display: flex; justify-content: space-between; font-weight: 600; font-size: 14px; gap: 10px; }
+  .notif .t span { color: var(--muted); font-weight: 400; }
+  .notif p { font-size: 14px; color: #dfe5ee; margin: 2px 0 0; line-height: 1.35; }
+  .whatSub { color: var(--muted); font-size: 16px; line-height: 1.5; margin: 8px 0 0; }
+
   /* Act 2 and 3: the line, the fire, the form */
   #stage {
     position: relative; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -183,7 +198,7 @@
   </div>
 
   <form id="form" class="fade" hidden novalidate>
-    <p class="pitch">put in your email for the app launch + early early founder benefits.<small>be first in. founder price. no spam, just the launch.</small></p>
+    <p class="pitch">put your email in and i’ll send you the app when it’s ready ❤️</p>
     <label class="sr" for="email">your email</label>
     <input id="email" name="email_address" type="email" inputmode="email" autocomplete="email" placeholder="your email" required>
     <button type="button" id="go">i’m in</button>
@@ -200,6 +215,18 @@
     <p class="fine" id="shareNote" role="status">life’s too short to go alone.</p>
   </section>
 </main>
+
+<!-- Scroll down: what the app actually does. -->
+<section id="what" aria-labelledby="whatTitle">
+  <p class="eyebrow">what it does</p>
+  <h2 id="whatTitle">a little fire that reminds you, a few times a day, that you’re going to die.</h2>
+  <div class="notifs" aria-label="Example reminders">
+    <div class="notif"><img src="../flame.png" alt=""><div><div class="t">life is calling <span>now</span></div><p><b>remember, you’re going to die.</b> so what are you doing today?</p></div></div>
+    <div class="notif"><img src="../flame.png" alt=""><div><div class="t">life is calling <span>2h ago</span></div><p><b>U DYING BABE 💀</b> and you’re still scrolling??</p></div></div>
+    <div class="notif"><img src="../flame.png" alt=""><div><div class="t">life is calling <span>5h ago</span></div><p><b>don’t forget, you’re gonna die.</b> life is calling. pick up.</p></div></div>
+  </div>
+  <p class="whatSub">1, 3 or 5 a day. calm, or unhinged if you need a slap.<br>so you stop waiting for tomorrow.</p>
+</section>
 
 <button id="skip" type="button">skip</button>
 
