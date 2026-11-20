@@ -457,14 +457,19 @@ setInterval(() => { heroSecs.textContent = Math.floor((heroEnd - Date.now()) / 1
     born = Date.now() - age * 365.25 * 864e5 - 182 * 864e5; // middle of that year of age
     $('jResult').hidden = false; $('jForm').hidden = false;
     clearInterval(tick);
+    // Ramp up from 0% to their real number over a few seconds, then keep ticking live.
+    const started = performance.now(), RAMP = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3200;
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    $('jUsed').style.transition = 'none';
     const draw = () => {
-      const gone = Math.min(1, (Date.now() - born) / LIFE);
+      const k = RAMP ? ease(Math.min(1, (performance.now() - started) / RAMP)) : 1;
+      const real = Math.min(1, (Date.now() - born) / LIFE);
+      const gone = real * k;
       $('jPct').textContent = (gone * 100).toFixed(8);
       $('jUsed').style.width = (gone * 100) + '%';
-      $('jSecs').textContent = Math.max(0, Math.floor((born + LIFE - Date.now()) / 1000)).toLocaleString('en-AU');
+      $('jSecs').textContent = Math.max(0, Math.floor((LIFE - gone * LIFE) / 1000)).toLocaleString('en-AU');
     };
-    requestAnimationFrame(draw); tick = setInterval(draw, 80);
-    setTimeout(() => $('jResult').scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+    draw(); tick = setInterval(draw, 40);
   });
 
   $('jForm').addEventListener('submit', async (e) => {
@@ -482,7 +487,6 @@ setInterval(() => { heroSecs.textContent = Math.floor((heroEnd - Date.now()) / 1
       $('jEmail').value = ''; $('jEmail').blur();
       note.textContent = 'you’re on the list. now go live.';
       $('jShare').hidden = false;
-      setTimeout(() => $('jShare').scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
     } catch {
       note.textContent = 'that didn’t go through. check your connection and try again.';
     } finally { $('jGo').disabled = false; }
