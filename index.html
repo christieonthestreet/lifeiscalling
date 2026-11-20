@@ -125,7 +125,10 @@ h2{font-weight:800;font-size:clamp(36px,5.4vw,64px);line-height:1.02;letter-spac
 .weeks .note{color:var(--muted);font-size:14px}
 
 /* join: the fire, your age, your %, then your email */
-.joinflow{padding:110px 0}
+.joinflow{min-height:calc(100vh - 64px);min-height:calc(100dvh - 64px);display:flex;align-items:center;padding:56px 0 70px}
+.joinflow>.wrap{width:100%}
+html.locked #rest,html.locked footer{display:none}
+.peek{margin-top:26px;background:none;border:0;color:var(--muted);font:500 15px Inter,sans-serif;text-decoration:underline;cursor:pointer}
 .jfire{position:relative;display:inline-flex;flex-direction:column;align-items:center;margin-bottom:22px}
 .jfire img{width:96px;animation:float 4s ease-in-out infinite}
 .bubble{background:#f6f3ec;color:#0a0d16;font-weight:700;font-size:18px;padding:12px 18px;border-radius:20px;margin-bottom:16px;position:relative;white-space:nowrap}
@@ -181,6 +184,10 @@ footer .links{gap:18px}
 </head>
 <body>
 <div id="intro" aria-hidden="true"><div class="say" id="say"></div><button id="skipIntro" type="button">skip</button></div>
+<script>
+  // The rest of the site stays hidden until they've seen their own number (or signed up before).
+  try { if (localStorage.getItem('lic-joined') !== '1') document.documentElement.classList.add('locked'); } catch (e) { document.documentElement.classList.add('locked'); }
+</script>
 <canvas id="sky" aria-hidden="true"></canvas>
 <div class="page">
 
@@ -194,44 +201,6 @@ footer .links{gap:18px}
 </div></nav>
 
 <main>
-<div class="wrap">
-  <header class="hero">
-    <div>
-      <div class="kicker"><i></i>now in beta on iPhone</div>
-      <p class="secret">the secret to happiness? remembering you’re gonna die.</p>
-      <h1>stop waiting for <em>tomorrow.</em></h1>
-      <p class="lede">a little fire that reminds you, a few times a day, that you're going to die. so you stop overthinking, stop saving your life for later, and actually go live.</p>
-      <div class="ctas">
-        <a class="btn melt" href="#join">join the waitlist</a>
-        <a class="btn ghost" href="https://testflight.apple.com/join/TR5dwAcK">try the iPhone beta</a>
-      </div>
-      <p class="soon">coming soon to the App Store and Google Play</p>
-    </div>
-    <div class="hero-phone">
-      <div class="phone tilt"><img src="./img/home.jpg" alt="The Life Is Calling home screen: a live countdown of the seconds you have left, under a little blue fire" width="390" height="844"></div>
-      <div class="ticker">you have about <b id="heroSecs">1,830,340,790</b> seconds left 😉</div>
-    </div>
-  </header>
-</div>
-
-<div class="marquee" aria-hidden="true"><div class="track" id="track"></div></div>
-
-<section id="how">
-  <div class="wrap feature reveal">
-    <div class="text">
-      <div class="eyebrow">the reminders</div>
-      <h2>the wake-up call <em>you can't snooze.</em></h2>
-      <p class="sub">1, 3 or 5 reminders a day, spread out so they never nag. calm, or unhinged if you need a slap. then one deep breath and one line of reflection.</p>
-      <div class="pills"><span class="pill">normal mode</span><span class="pill">unhinged mode 🔥</span><span class="pill">breathe</span><span class="pill">reflections</span></div>
-    </div>
-    <div class="art notifs" aria-label="Example reminders">
-      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>now</span></div><p><b>remember, you're going to die.</b> so what are you doing today?</p></div></div>
-      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>2h ago</span></div><p><b>U DYING BABE 💀</b> and you're still scrolling??</p></div></div>
-      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>5h ago</span></div><p><b>don't forget, you're gonna die.</b> life is calling. pick up.</p></div></div>
-    </div>
-  </div>
-</section>
-
 <section id="join" class="joinflow">
   <div class="wrap center reveal">
     <div class="jfire">
@@ -262,11 +231,50 @@ footer .links{gap:18px}
     </form>
 
     <div id="jShare" class="jshare" hidden>
-      <h3>want it for free? 🔥</h3>
-      <p>invite 3 friends. when 3 of them join, you get <b>3 months of premium free</b> at launch.</p>
+      <h3>want it free, forever? 🔥</h3>
+      <p>send it to 3 friends. <b>whoever invites the most people gets life is calling free, forever.</b></p>
       <button class="btn melt" type="button" id="jShareBtn">share with a friend</button>
       <button class="btn ghost" type="button" id="jCopyBtn">copy my invite link</button>
       <p class="fine" id="jShareNote" role="status">life’s too short to go alone.</p>
+    </div>
+    <button type="button" class="peek" id="peek" hidden>just looking? see the app ↓</button>
+  </div>
+</section>
+
+<div id="rest">
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <p class="secret">the secret to happiness? remembering you’re gonna die.</p>
+      <h1>stop waiting for <em>tomorrow.</em></h1>
+      <p class="lede">a little fire that reminds you, a few times a day, that you're going to die. so you stop overthinking, stop saving your life for later, and actually go live.</p>
+      <div class="ctas">
+        <a class="btn melt" href="#join">join the waitlist</a>
+        <a class="btn ghost" href="https://testflight.apple.com/join/TR5dwAcK">try the iPhone beta</a>
+      </div>
+      <p class="soon">coming soon to the App Store and Google Play</p>
+    </div>
+    <div class="hero-phone">
+      <div class="phone tilt"><img src="./img/home.jpg" alt="The Life Is Calling home screen: a live countdown of the seconds you have left, under a little blue fire" width="390" height="844"></div>
+      <div class="ticker">you have about <b id="heroSecs">1,830,340,790</b> seconds left 😉</div>
+    </div>
+  </header>
+</div>
+
+<div class="marquee" aria-hidden="true"><div class="track" id="track"></div></div>
+
+<section id="how">
+  <div class="wrap feature reveal">
+    <div class="text">
+      <div class="eyebrow">the reminders</div>
+      <h2>the wake-up call <em>you can't snooze.</em></h2>
+      <p class="sub">1, 3 or 5 reminders a day, spread out so they never nag. calm, or unhinged if you need a slap. then one deep breath and one line of reflection.</p>
+      <div class="pills"><span class="pill">normal mode</span><span class="pill">unhinged mode 🔥</span><span class="pill">breathe</span><span class="pill">reflections</span></div>
+    </div>
+    <div class="art notifs" aria-label="Example reminders">
+      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>now</span></div><p><b>remember, you're going to die.</b> so what are you doing today?</p></div></div>
+      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>2h ago</span></div><p><b>U DYING BABE 💀</b> and you're still scrolling??</p></div></div>
+      <div class="notif"><img src="./flame.png" alt=""><div style="flex:1"><div class="t">life is calling <span>5h ago</span></div><p><b>don't forget, you're gonna die.</b> life is calling. pick up.</p></div></div>
     </div>
   </div>
 </section>
@@ -328,6 +336,7 @@ footer .links{gap:18px}
     <p class="soon">on android? email christieonthestreet@gmail.com with "android beta".</p>
   </div>
 </section>
+</div><!-- /rest -->
 </main>
 
 <footer><div class="wrap">
@@ -452,6 +461,7 @@ setInterval(() => { heroSecs.textContent = Math.floor((heroEnd - Date.now()) / 1
       $('jSecs').textContent = Math.max(0, Math.floor((born + LIFE - Date.now()) / 1000)).toLocaleString('en-AU');
     };
     requestAnimationFrame(draw); tick = setInterval(draw, 80);
+    $('peek').hidden = false;
     setTimeout(() => $('jResult').scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
   });
 
@@ -470,6 +480,8 @@ setInterval(() => { heroSecs.textContent = Math.floor((heroEnd - Date.now()) / 1
       $('jEmail').value = ''; $('jEmail').blur();
       note.textContent = 'you’re on the list. now go live.';
       $('jShare').hidden = false;
+      store.set('lic-joined', '1');
+      unlock();
       setTimeout(() => $('jShare').scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
     } catch {
       note.textContent = 'that didn’t go through. check your connection and try again.';
@@ -485,6 +497,14 @@ setInterval(() => { heroSecs.textContent = Math.floor((heroEnd - Date.now()) / 1
     else copy();
   });
   $('jCopyBtn').addEventListener('click', copy);
+  function unlock() {
+    document.documentElement.classList.remove('locked');
+    $('peek').hidden = true;
+    document.querySelectorAll('#rest .reveal').forEach((el) => io.observe(el));
+  }
+  $('peek').addEventListener('click', () => { unlock(); setTimeout(() => document.querySelector('#rest').scrollIntoView({ behavior: 'smooth' }), 60); });
+  // nav links to hidden parts open the site too
+  document.querySelectorAll('nav a[href^="#"]:not([href="#join"])').forEach((a) => a.addEventListener('click', unlock));
 })();
 
 // fade sections in as you scroll
